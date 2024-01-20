@@ -1,0 +1,61 @@
+/* Main */
+.container {
+    max-width: 760px;
+    margin: auto;
+}
+
+/* End Main */
+
+/* Thumnail */
+
+.thumbnailCode {
+    border: 0px;
+    border-radius: 5px;
+}
+
+.thumbnailCode pre {
+    height: 200px;
+    font-size: 0.3rem !important;
+    overflow: hidden !important;
+}
+
+.fullCode pre {
+    max-height: none;
+    font-size: 1rem !important;
+    overflow: auto !important;
+}
+
+/* -- Zoom in Effect */
+
+.hover-zoom {
+    overflow: hidden;
+}
+
+.hover-zoom pre {
+    transition: transform .5s ease;
+}
+
+.hover-zoom:hover pre {
+    transform: scale(1.5);
+}
+
+/* End Thumnail */
+
+/* Code Cards */
+.code-card {
+    max-width: 720px;
+}
+
+/* End Code Cards */
+
+/* Check List */
+
+.checklist {
+    list-style: none;
+}
+
+.checklist i {
+    color: royalblue;
+    margin-right: 1rem;
+}
+/* End Checklist */
