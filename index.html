@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="dark">
 
 <head>
-    <title>App Name a Coding Challange</title>
+    <title>Caesar Cipher a Coding Challange</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -26,17 +26,18 @@
 
     <main class="mb-5">
         <div class="container mt-5">
-            <h1>App Name</h1>
+            <h1>Caesar Cipher</h1>
             <p class="lead">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora doloribus numquam nesciunt maiores
-                repellendus dolorum. Esse voluptatem odit est iusto alias, vel quaerat laboriosam nobis.
+                The application, enables users to apply a Caesar Cipher to
+                either encrypt or decrypt a message. It's a basic form of encryption that shifts the letters in the
+                message by a specified numerical value, offering a simple way to secure or reveal information.
             </p>
             <ul class="checklist">
-                <li><i class="bi bi-check2-square"></i>Lorem ipsum dolor sit amet.</li>
-                <li><i class="bi bi-check2-square"></i>Lorem ipsum dolor sit amet.</li>
-                <li><i class="bi bi-check2-square"></i>Lorem ipsum dolor sit amet.</li>
-                <li><i class="bi bi-check2-square"></i>Lorem ipsum dolor sit amet.</li>
-                <li><i class="bi bi-check2-square"></i>Lorem ipsum dolor sit amet.</li>
+                <li><i class="bi bi-check2-square"></i>Input Validation</li>
+                <li><i class="bi bi-check2-square"></i>Separation of Concerns</li>
+                <li><i class="bi bi-check2-square"></i>Descriptive Function Names</li>
+                <li><i class="bi bi-check2-square"></i>Logical Structure</li>
+                <li><i class="bi bi-check2-square"></i>User-Friendly Error Handling</li>
             </ul>
         </div>
         <div class="container mt-5">
@@ -47,25 +48,24 @@
                         <!-- Input -->
                         <form>
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="number-input" value="1">
-                                <label for="number-input">Number Input</label>
+                                <input type="number" class="form-control" id="shift-input" value="3" min="-10" max="10">
+                                <label for="shift-input">Shift</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="string-Input" value="Example text">
-                                <label for="string-Input">String Input</label>
+                                <input class="form-control" id="message-input" value="Lpshuldo Vhfuhwv Xqyhlohg"
+                                    maxlength="50">
+                                <label for="message-input">Message</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <select class="form-select" id="select-input">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                <select class="form-select" id="operation-select">
+                                    <option value="Encrypt">Encrypt</option>
+                                    <option value="Decrypt" selected>Decrypt</option>
                                 </select>
-                                <label for="floatingSelect">Works with selects</label>
+                                <label for="operation-select">Operation</label>
                             </div>
                             <div class="text-end">
-                                <button class="btn btn-outline-primary btn-lg" onclick="getValues()"
-                                    type="button">Controller Function Trigger</button>
+                                <button class="btn btn-outline-primary btn-lg" onclick="processUserInput()"
+                                    type="button">Reveal Message</button>
                             </div>
                         </form>
                     </div>
@@ -73,11 +73,11 @@
                 <div class="col-sm-8 order-first order-sm-0">
                     <p class="lead">Instructions</p>
                     <ol>
-                        <li>Lorem ipsum dolor sit amet.</li>
-                        <li>Lorem ipsum dolor sit amet.</li>
-                        <li>Lorem ipsum dolor sit amet.</li>
-                        <li>Lorem ipsum dolor sit amet.</li>
-                        <li>Lorem ipsum dolor sit amet.</li>
+                        <li>Enter the numerical shift amount (between -10 and 10).</li>
+                        <li>Type your message in the provided input field.</li>
+                        <li>Select an operation: Encrypt or Decrypt.</li>
+                        <li>Click the "Reveal Message" button.</li>
+                        <li>View the result below.</li>
                     </ol>
                 </div>
                 <div class="col-12">
@@ -96,34 +96,106 @@
             <div class="card bg-body-secondary mt-4 mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <button onclick="expandThumnail('firstFunctionThumnail', 'firstFunctionContent')" type="button"
-                            data-bs-toggle="modal" data-bs-target="#firstFunctionModal" id="firstFunctionThumnail"
-                            class="p-2 w-100 thumbnailCode hover-zoom bg-body-secondary">
+                        <button onclick="expandThumnail('processUserInputThumnail', 'processUserInputContent')"
+                            type="button" data-bs-toggle="modal" data-bs-target="#processUserInputModal"
+                            id="processUserInputThumnail" class="p-2 w-100 thumbnailCode hover-zoom bg-body-secondary">
                             <pre class="line-numbers rounded">
-                                <code class="language-JS"></code>
+                                <code class="language-JS">
+                                    // Controller
+function processUserInput() {
+    // Get inputs from the DOM
+    let shiftAmount = document.getElementById('shift-input').value;
+    let message = document.getElementById('message-input').value;
+    let operationType = document.getElementById('operation-select').value;
+
+    // Convert shiftAmount to a number
+    shiftAmount = Number.parseInt(shiftAmount);
+
+    // Convert message to lowercase for consistency
+    message = message.toLowerCase();
+
+    // Validate inputs
+
+    // -- Shift Amount
+    if (Number.isNaN(shiftAmount)) {
+        // Error message for invalid shift value
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Shift",
+            text: "Please enter a valid numerical shift value.",
+        });
+        return;
+    } else if (shiftAmount > 10 || shiftAmount &lt; -10) {
+        // Error message for out-of-range shift value
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Shift Range",
+            text: "Shift value must be between -10 and 10.",
+        });
+        return;
+    }
+
+    // -- Message
+    if (message.length > 50) {
+        // Error message for a message that is too long
+        Swal.fire({
+            icon: "error",
+            title: "Message Too Long",
+            text: "The message should not exceed 50 characters.",
+        });
+        return;
+    }
+
+    // -- Operation Type
+    if (operationType !== 'Encrypt' && operationType !== 'Decrypt') {
+        // Error message for an invalid operation
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Operation",
+            text: "Please select a valid operation: Encrypt or Decrypt.",
+        });
+        return;
+    }
+
+    // Cipher Message
+    let cipherMessage = '';
+
+    // Encrypt/Decrypt
+    if (operationType == 'Encrypt') {
+        // Process encryption
+        cipherMessage = processEncryption(message, shiftAmount);
+    } else if (operationType == 'Decrypt') {
+        // Process decryption
+        cipherMessage = processDecryption(message, shiftAmount);
+    }
+
+    // Display Result
+    displayCipherMessage(cipherMessage);
+}
+                                </code>
                             </pre>
                         </button>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body h-100">
-                            <h5 class="card-title">Controller (firstFunction)</h5>
+                            <h5 class="card-title">Controller (processUserInput)</h5>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni quidem assumenda libero,
-                                cum mollitia animi fugit porro aut amet dignissimos, sed quia similique dolor vitae?
-                                Sint eum dolore atque voluptate!
-                            </p>
+                                Gathers user input, ensures its validity, and orchestrates the application's main
+                                functionality, allowing users to
+                                encrypt or decrypt a message using a Caesar Cipher with a specified shift. </p>
                             <!-- Modal -->
-                            <div class="modal fade modal-lg" id="firstFunctionModal" tabindex="-1"
-                                aria-labelledby="firstFunctionModalLabel" aria-hidden="true">
+                            <div class="modal fade modal-lg" id="processUserInputModal" tabindex="-1"
+                                aria-labelledby="processUserInputModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="firstFunctionModalLabel">firstFunction()
+                                            <h1 class="modal-title fs-5" id="processUserInputModalLabel">
+                                                processUserInput()
                                             </h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
-                                        <div id="firstFunctionContent" class="modal-body fullCode">
+                                        <div id="processUserInputContent" class="modal-body fullCode">
                                             <pre class="line-numbers"></pre>
                                         </div>
                                         <div class="modal-footer">
@@ -141,35 +213,76 @@
             <div class="card bg-body-secondary mt-4 mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <button onclick="expandThumnail('secondFunctionThumnail', 'secondFunctionContent')"
-                            type="button" data-bs-toggle="modal" data-bs-target="#secondFunctionModal"
-                            id="secondFunctionThumnail" class="p-2 w-100 thumbnailCode hover-zoom  bg-body-secondary">
+                        <button onclick="expandThumnail('processEncryptionThumnail', 'processEncryptionContent')"
+                            type="button" data-bs-toggle="modal" data-bs-target="#processEncryptionModal"
+                            id="processEncryptionThumnail"
+                            class="p-2 w-100 thumbnailCode hover-zoom  bg-body-secondary">
                             <pre class="line-numbers rounded">
-                                <code class="language-JS"></code>
+                                <code class="language-JS">
+                                    // Logic
+function processEncryption(message, shiftAmount) {
+    // Create an encrypted message 
+    let cipherMessage = '';
+    // Alphabet to use as a guide
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+    // Use a loop to change the letters and add them to the cipher message
+    for (let i = 0; i &lt; message.length; i++) {
+        const currentLetter = message[i];
+        let indexInAlphabet = alphabet.indexOf(currentLetter);
+
+        // Add non-alphabetic characters directly to the cipher message
+        if (indexInAlphabet == -1) {
+            cipherMessage += currentLetter;
+            continue;
+        }
+
+        // Shift the letter's index based on the shift input
+        indexInAlphabet += shiftAmount;
+
+        // Keep the index within the range of 0 - 26
+        if (indexInAlphabet > 26) {
+            while (indexInAlphabet > 26) {
+                indexInAlphabet -= 27;
+            }
+        } else if (indexInAlphabet &lt; 0) {
+            while (indexInAlphabet &lt; 0) {
+                indexInAlphabet += 27;
+            }
+        }
+
+        // Add the encrypted letter to the cipher message
+        cipherMessage += alphabet[indexInAlphabet];
+    }
+
+    // Return the result
+    return cipherMessage;
+}
+                                </code>
                             </pre>
                         </button>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body h-100">
-                            <h5 class="card-title">Logic (secondFunction)</h5>
+                            <h5 class="card-title">Logic (processEncryption)</h5>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, fugit, quasi
-                                mollitia voluptate culpa quibusdam delectus quam nemo magnam error saepe similique
-                                reprehenderit totam a architecto aperiam. Magnam, eaque voluptate!
+                                Takes a user's message and a shift amount, then transforms the message into an encrypted
+                                form using a Caesar Cipher,
+                                providing a secure and simple method of encoding information.
                             </p>
                             <!-- Modal -->
-                            <div class="modal fade modal-lg" id="secondFunctionModal" tabindex="-1"
-                                aria-labelledby="secondFunctionModalLabel" aria-hidden="true">
+                            <div class="modal fade modal-lg" id="processEncryptionModal" tabindex="-1"
+                                aria-labelledby="processEncryptionModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="secondFunctionModalLabel">
-                                                secondFunction()
+                                            <h1 class="modal-title fs-5" id="processEncryptionModalLabel">
+                                                processEncryption()
                                             </h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
-                                        <div id="secondFunctionContent" class="modal-body fullCode">
+                                        <div id="processEncryptionContent" class="modal-body fullCode">
                                             <pre class="line-numbers"></pre>
                                         </div>
                                         <div class="modal-footer">
@@ -187,34 +300,131 @@
             <div class="card bg-body-secondary mt-4 mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <button onclick="expandThumnail('thirdFunctionThumnail', 'thirdFunctionContent')" type="button"
-                            data-bs-toggle="modal" data-bs-target="#thirdFunctionModal" id="thirdFunctionThumnail"
-                            class="p-2 w-100 thumbnailCode hover-zoom bg-body-secondary">
+                        <button onclick="expandThumnail('processDecryptionThumnail', 'processDecryptionContent')"
+                            type="button" data-bs-toggle="modal" data-bs-target="#processDecryptionModal"
+                            id="processDecryptionThumnail" class="p-2 w-100 thumbnailCode hover-zoom bg-body-secondary">
                             <pre class="line-numbers rounded">
-                                <code class="language-JS"></code>
+                                <code class="language-JS">
+                                    function processDecryption(message, shiftAmount) {
+    // Create a decrypted message
+    let cipherMessage = '';
+    // Alphabet to use as a guide
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+    // Use a loop to change the letters and add them to the cipher message
+    for (let i = 0; i &lt; message.length; i++) {
+        const currentLetter = message[i];
+        let indexInAlphabet = alphabet.indexOf(currentLetter);
+
+        // Add non-alphabetic characters directly to the cipher message
+        if (indexInAlphabet == -1) {
+            cipherMessage += currentLetter;
+            continue;
+        }
+
+        // Shift the letter's index based on the shift input
+        indexInAlphabet -= shiftAmount;
+
+        // Keep the index within the range of 0 - 26
+        if (indexInAlphabet > 26) {
+            while (indexInAlphabet > 26) {
+                indexInAlphabet -= 27;
+            }
+        } else if (indexInAlphabet &lt; 0) {
+            while (indexInAlphabet &lt; 0) {
+                indexInAlphabet += 27;
+            }
+        }
+
+        // Add the decrypted letter to the cipher message
+        cipherMessage += alphabet[indexInAlphabet];
+    }
+
+    // Return the result
+    return cipherMessage;
+}
+                                </code>
                             </pre>
                         </button>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body h-100">
-                            <h5 class="card-title">View (thirdFunction)</h5>
+                            <h5 class="card-title">Logic (processDecryption)</h5>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia rerum consequatur ad
-                                reiciendis! Odio assumenda tempore consequuntur autem quia. Laboriosam voluptatem id
-                                sunt ad esse asperiores maiores harum a repellat?
+                                Similar to processEncryption, this function decrypts a user's message by reversing the
+                                Caesar Cipher process, revealing
+                                the original content and offering a straightforward way to decode information.
                             </p>
                             <!-- Modal -->
-                            <div class="modal fade modal-lg" id="thirdFunctionModal" tabindex="-1"
-                                aria-labelledby="thirdFunctionModalLabel" aria-hidden="true">
+                            <div class="modal fade modal-lg" id="processDecryptionModal" tabindex="-1"
+                                aria-labelledby="processDecryptionModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="thirdFunctionModalLabel">thirdFunction()
+                                            <h1 class="modal-title fs-5" id="processDecryptionModalLabel">
+                                                processDecryption()
                                             </h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
-                                        <div id="thirdFunctionContent" class="modal-body fullCode">
+                                        <div id="processDecryptionContent" class="modal-body fullCode">
+                                            <pre class="line-numbers"></pre>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-body-secondary mt-4 mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <button onclick="expandThumnail('displayCipherMessageThumnail', 'displayCipherMessageContent')"
+                            type="button" data-bs-toggle="modal" data-bs-target="#displayCipherMessageModal"
+                            id="displayCipherMessageThumnail"
+                            class="p-2 w-100 thumbnailCode hover-zoom  bg-body-secondary">
+                            <pre class="line-numbers rounded">
+                                <code class="language-JS">
+                                    // View
+function displayCipherMessage(cipherMessage) {
+    // Format the results as HTML
+    let results = `&lt;span class="text-muted">Cipher Message&lt;/span>&lt;br>
+                   &lt;h1 class="text-primary text-capitalize">${cipherMessage}&lt;/h1>`
+
+    // Display to the DOM
+    document.getElementById('results').innerHTML = results;
+    document.getElementById('resultsContainer').classList.remove('d-none');
+}
+                                </code>
+                            </pre>
+                        </button>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body h-100">
+                            <h5 class="card-title">View (displayCipherMessage)</h5>
+                            <p class="card-text">
+                                Formats and presents the result of the encryption or decryption process in a
+                                user-friendly manner, making the output
+                                easily visible and accessible to users. </p>
+                            <!-- Modal -->
+                            <div class="modal fade modal-lg" id="displayCipherMessageModal" tabindex="-1"
+                                aria-labelledby="displayCipherMessageModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="displayCipherMessageModalLabel">
+                                                displayCipherMessage()
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div id="displayCipherMessageContent" class="modal-body fullCode">
                                             <pre class="line-numbers"></pre>
                                         </div>
                                         <div class="modal-footer">
